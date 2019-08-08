@@ -10,6 +10,7 @@ cc.Class({
         if (this.target && this.target.spriteFrame) {
             let texture = this.target.spriteFrame.getTexture();
             this._material.setTexture(texture);
+            this._material.setResolution(this.target.node.width, this.target.node.height);
             this._material.updateHash(Date.now());
             this.target._material = this._material;
             this.target._renderData._material = this._material;
@@ -26,10 +27,7 @@ cc.Class({
 
         this.node.on(cc.Node.EventType.MOUSE_MOVE,e=>{
             let location = this.node.convertToNodeSpaceAR(e.getLocation());
-            // this._material.setPosition({
-            //     x:  -(location.x - this.node.width/2) / (this.node.width/2),
-            //     y:  -(this.node.height - location.y - this.node.height/2)/(this.node.height/2)
-            // });
+
             this._material.setPosition({
                 x:- location.x / (this.node.width),
                 y:location.y / (this.node.height),

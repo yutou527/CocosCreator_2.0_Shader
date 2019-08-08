@@ -71,8 +71,8 @@ let shader = {
         if(uv0.x < start &&  uv0.x > (start - w))
         // if(uv0.x < (start - offset * uv0.y) &&  uv0.x > (start - offset * uv0.y - w))
         {
-            strength = 1.0 + 2.*(1.-abs(uv0.x - start + w/2.)/(w/2.)); //渐变强度
-            // strength = 1.0 + 2.0 * (1.0-abs(uv0.x - (start-w/2.) ) / (w/2.)); //渐变强度
+            // strength = 1.0 + 2.*(1.-abs(uv0.x - start + w/2.)/(w/2.)); //渐变强度
+            strength = 1.0 + 3.*smoothstep(0.0,1.0,1.-abs(uv0.x - start + w/2.)/(w/2.)); //渐变强度 使用smoothstep
             vec3 result = vec3( src_color.r * strength, src_color.g *strength, src_color.b *strength);
             gl_FragColor = vec4(result, src_color.a);
 

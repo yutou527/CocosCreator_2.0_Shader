@@ -23,16 +23,11 @@ let shader = {
     void main()
     {
         vec4 src_color = texture2D(iTexture, uv0).rgba;
-        // float strength = light_strength / 100.0;
         float strength = light_strength;
-        // vec3 improve = strength * vec3(255, 255, 255);
-        // vec3 result = improve * vec3(src_color.r, src_color.g, src_color.b);
         vec3 result = vec3(src_color.r * strength, src_color.g * strength, src_color.b * strength);
-        // gl_FragColor = revert ? src_color : vec4(result, src_color.a);
         gl_FragColor = vec4(result, src_color.a);
     }`,
-    //gl_FragColor = vec4(result, src_color.a);
-    //gl_FragColor = revert?src_color:vec4(result, src_color.a);
+
 };
 
 cc.game.once(cc.game.EVENT_ENGINE_INITED, function () {

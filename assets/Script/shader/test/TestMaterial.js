@@ -26,6 +26,9 @@ function TestMaterial() {
             name: 'iTexture',
             type: renderer.PARAM_TEXTURE_2D
         }, {
+            name: 'iResolution',
+            type: renderer.PARAM_FLOAT3
+        }, {
             name: 'time',
             type: renderer.PARAM_FLOAT
         }, {
@@ -38,12 +41,13 @@ function TestMaterial() {
     );
 
     this._texture = null;
+    this._resolution = math.vec3.create();
 
     // need _effect to calculate hash
     this._effect = this.effect = new renderer.Effect(
         [
             mainTech,
-        ], {},
+        ], { 'iResolution': this._resolution, },
         []
     );
 
@@ -72,14 +76,18 @@ cc.js.mixin(TestMaterial.prototype, {
     setTime(time) {
         this.effect.setProperty('time', time);
     },
-    setPosition(p){
+    setResolution(w, h) {
+        cc.log(w, h)
+        this._resolution.x = w;
+        this._resolution.y = h;
+    },
+    setPosition(p) {
         let pos = math.vec2.create();
         pos.x = p.x;
         pos.y = p.y;
-        cc.log(p)
         this.effect.setProperty('u_mouse', pos);
     }
-  
+
 
 });
 
