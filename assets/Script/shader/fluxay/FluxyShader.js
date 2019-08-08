@@ -64,20 +64,16 @@ let shader = {
        vec4 src_color = color * texture2D(iTexture, uv0).rgba;
 
         float w = 0.4;       //宽度
-        // float start = tan(time/1.414); 
         float start = abs(sin(time/1.414)); //位置函数
         // float start = tan(time/1.414);  
         float strength = 3.0;   //流光增亮强度   (调整该值改变流光的增亮强度)
-        // float strength = 0.08;   //流光增亮强度   (调整该值改变流光的增亮强度)
         float offset = 0.2;      //偏移值         (调整该值改变流光的倾斜程度)
         if(uv0.x < start &&  uv0.x > (start - w))
         // if(uv0.x < (start - offset * uv0.y) &&  uv0.x > (start - offset * uv0.y - w))
         {
-            strength = 1.0 + 2.0 * (1.0-abs(uv0.x - start + w/2.) / (w/2.)); //渐变强度
-            // vec3 improve = strength * vec3(255, 255, 255);
-            // vec3 result = improve * vec3( src_color.r, src_color.g, src_color.b);
+            strength = 1.0 + 2.*(1.-abs(uv0.x - start + w/2.)/(w/2.)); //渐变强度
+            // strength = 1.0 + 2.0 * (1.0-abs(uv0.x - (start-w/2.) ) / (w/2.)); //渐变强度
             vec3 result = vec3( src_color.r * strength, src_color.g *strength, src_color.b *strength);
-
             gl_FragColor = vec4(result, src_color.a);
 
         }else{

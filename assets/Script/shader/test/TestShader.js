@@ -187,7 +187,7 @@ let shader = {
 
     //跟随鼠标的眩光效果
     frag: `
-        const int NUM_SAMPLES = 60;
+        const int NUM_SAMPLES = 55;
         uniform float time;
         varying vec2 uv0;
         uniform sampler2D iTexture;
@@ -208,7 +208,7 @@ let shader = {
             float decay=0.96815;
             float exposure=0.21;
             float density=0.926;
-            float weight= 0.9;//0.58767;
+            float weight= 0.78767;
             
             vec2 tc = uv0;
             vec2 deltaTexCoord = tc;

@@ -3,9 +3,9 @@ cc.Class({
 
     properties: {
         from: 1, //开始亮度 1为原亮度
-        to: 2,
-        speed: 2,
-        breath: false,
+        to: 3,
+        speed: 1,
+        breath: true,
         autoStart: false,
         isAnim: true, //是否需要动画
         delay: 1, //非动画方式的延迟回复时间
@@ -19,7 +19,7 @@ cc.Class({
             this.target._material = this._material;
             this.target._renderData._material = this._material;
             if (this.autoStart) {
-                this._shouldRun = true;
+                this.doStart();
             }
         }
     },
