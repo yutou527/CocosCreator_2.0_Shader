@@ -186,53 +186,53 @@ let shader = {
     // }`,
 
     //跟随鼠标的眩光效果
-    // frag: `
-    //     const int NUM_SAMPLES = 60;
-    //     uniform float time;
-    //     varying vec2 uv0;
-    //     uniform sampler2D iTexture;
-    //     uniform vec2 u_mouse;  //鼠标位置
+    frag: `
+        const int NUM_SAMPLES = 60;
+        uniform float time;
+        varying vec2 uv0;
+        uniform sampler2D iTexture;
+        uniform vec2 u_mouse;  //鼠标位置
 
-    //     float random (vec2 st) {
-    //         return fract(sin(dot(st.xy + fract(time),vec2(12.9898,78.233)))*43758.5453123);
-    //     }
-    //     float noise(vec2 u){
-    //         return mix( mix( random( vec2(0.0,0.0) ),
-    //                         random( vec2(1.0,0.0) ), u.x),
-    //                     mix( random( vec2(0.0,1.0) ),
-    //                         random( vec2(1.0,1.0) ), u.x), u.y);
-    //     }
+        float random (vec2 st) {
+            return fract(sin(dot(st.xy + fract(time),vec2(12.9898,78.233)))*43758.5453123);
+        }
+        float noise(vec2 u){
+            return mix( mix( random( vec2(0.0,0.0) ),
+                            random( vec2(1.0,0.0) ), u.x),
+                        mix( random( vec2(0.0,1.0) ),
+                            random( vec2(1.0,1.0) ), u.x), u.y);
+        }
 
-    //     void main(void) 
-    //     {
-    //         float decay=0.96815;
-    //         float exposure=0.21;
-    //         float density=0.926;
-    //         float weight= 0.9;//0.58767;
+        void main(void) 
+        {
+            float decay=0.96815;
+            float exposure=0.21;
+            float density=0.926;
+            float weight= 0.9;//0.58767;
 
-    //         vec2 tc = uv0;
-    //         vec2 deltaTexCoord = tc;
+            vec2 tc = uv0;
+            vec2 deltaTexCoord = tc;
 
-    //         deltaTexCoord =  uv0 + u_mouse - 0.5;//+vec2(sin(time*.7)*.3,-cos(time*.2)*.3)-.5;
-    //         deltaTexCoord *= 1.0 / float(NUM_SAMPLES)  * density;
+            deltaTexCoord =  uv0 + u_mouse - 0.5;//+vec2(sin(time*.7)*.3,-cos(time*.2)*.3)-.5;
+            deltaTexCoord *= 1.0 / float(NUM_SAMPLES)  * density;
 
-    //         float illuminationDecay = 1.0;
-    //         vec4 color =texture2D(iTexture, tc.xy)*0.305104;
+            float illuminationDecay = 1.0;
+            vec4 color =texture2D(iTexture, tc.xy)*0.305104;
 
-    //         tc += deltaTexCoord * fract( sin(dot(uv0.xy+fract(time),vec2(12.9898, 78.233)))* 43758.5453 );
+            tc += deltaTexCoord * fract( sin(dot(uv0.xy+fract(time),vec2(12.9898, 78.233)))* 43758.5453 );
 
-    //         for(int i=0; i < NUM_SAMPLES; i++)
-    //         {
-    //             tc -= deltaTexCoord;
-    //             vec4 sampleTex = texture2D(iTexture, tc)*0.305104;
-    //             sampleTex *= illuminationDecay * weight;
-    //             color += sampleTex;
-    //             illuminationDecay *= decay;
-    //         }
-    //         gl_FragColor = color*exposure;
-    //         // gl_FragColor = vec4( noise(uv0), noise(uv0), noise(uv0), 1.0);
-    //     }
-    // `
+            for(int i=0; i < NUM_SAMPLES; i++)
+            {
+                tc -= deltaTexCoord;
+                vec4 sampleTex = texture2D(iTexture, tc)*0.305104;
+                sampleTex *= illuminationDecay * weight;
+                color += sampleTex;
+                illuminationDecay *= decay;
+            }
+            gl_FragColor = color*exposure;
+            // gl_FragColor = vec4( noise(uv0), noise(uv0), noise(uv0), 1.0);
+        }
+    `
 
 
     //噪音 烟雾
@@ -344,55 +344,55 @@ let shader = {
     // }
 
     // `
-    frag: `
-    uniform float time;
-    uniform sampler2D iTexture;
-    uniform vec3 iResolution;
-    uniform vec4 color;
-    varying vec2 uv0;
-            //Calculate the squared length of a vector
-    float length2(vec2 p){
-        return dot(p,p);
-    }
+    // frag: `
+    // uniform float time;
+    // uniform sampler2D iTexture;
+    // uniform vec3 iResolution;
+    // uniform vec4 color;
+    // varying vec2 uv0;
+    //         //Calculate the squared length of a vector
+    // float length2(vec2 p){
+    //     return dot(p,p);
+    // }
 
-    //Generate some noise to scatter points.
-    float noise(vec2 p){
-        return fract(sin(fract(sin(p.x) * (43.13311)) + p.y) * 31.0011);
-    }
+    // //Generate some noise to scatter points.
+    // float noise(vec2 p){
+    //     return fract(sin(fract(sin(p.x) * (43.13311)) + p.y) * 31.0011);
+    // }
 
-    float worley(vec2 p) {
-        //Set our distance to infinity
-        float d = 1e30;
-        //For the 9 surrounding grid points
-        for (int xo = -1; xo <= 1; ++xo) {
-            for (int yo = -1; yo <= 1; ++yo) {
-                //Floor our vec2 and add an offset to create our point
-                vec2 tp = floor(p) + vec2(xo, yo);
-                //Calculate the minimum distance for this grid point
-                //Mix in the noise value too!
-                d = min(d, length2(p - tp - noise(tp)));
-            }
-        }
-        return 3.0*exp(-4.0*abs(2.5*d - 1.0));
-    }
+    // float worley(vec2 p) {
+    //     //Set our distance to infinity
+    //     float d = 1e30;
+    //     //For the 9 surrounding grid points
+    //     for (int xo = -1; xo <= 1; ++xo) {
+    //         for (int yo = -1; yo <= 1; ++yo) {
+    //             //Floor our vec2 and add an offset to create our point
+    //             vec2 tp = floor(p) + vec2(xo, yo);
+    //             //Calculate the minimum distance for this grid point
+    //             //Mix in the noise value too!
+    //             d = min(d, length2(p - tp - noise(tp)));
+    //         }
+    //     }
+    //     return 3.0*exp(-4.0*abs(2.5*d - 1.0));
+    // }
 
-    float fworley(vec2 p) {
-        //Stack noise layers 
-        return sqrt(sqrt(sqrt(
-            worley(p*5.0 + 0.05*time) *
-            sqrt(worley(p * 50.0 + 0.12 + -0.1*time)) *
-            sqrt(sqrt(worley(p * -10.0 + 0.03*time))))));
-    }
-    void main(){
-        vec2 uv = gl_FragCoord.xy / iResolution.xy;
-        //Calculate an intensity
-        float t = fworley(uv * iResolution.xy / 1500.0);
-        //Add some gradient
-        t*=exp(-length2(abs(0.7*uv - 1.0)));	
-        //Make it blue!
-        gl_FragColor = vec4(t * vec3(0.1, 1.1*t, pow(t, 0.5-t)), 1.0);
-    }
-    `
+    // float fworley(vec2 p) {
+    //     //Stack noise layers 
+    //     return sqrt(sqrt(sqrt(
+    //         worley(p*5.0 + 0.05*time) *
+    //         sqrt(worley(p * 50.0 + 0.12 + -0.1*time)) *
+    //         sqrt(sqrt(worley(p * -10.0 + 0.03*time))))));
+    // }
+    // void main(){
+    //     vec2 uv = gl_FragCoord.xy / iResolution.xy;
+    //     //Calculate an intensity
+    //     float t = fworley(uv * iResolution.xy / 1500.0);
+    //     //Add some gradient
+    //     t*=exp(-length2(abs(0.7*uv - 1.0)));	
+    //     //Make it blue!
+    //     gl_FragColor = vec4(t * vec3(0.1, 1.1*t, pow(t, 0.5-t)), 1.0);
+    // }
+    // `
 
 };
 
