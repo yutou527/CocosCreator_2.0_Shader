@@ -1,0 +1,9 @@
+{
+  "ver": "1.0.5",
+  "uuid": "f0cf625f-8e94-44f7-b12e-82ecaaaaa118",
+  "isPlugin": false,
+  "loadPluginInWeb": true,
+  "loadPluginInNative": true,
+  "loadPluginInEditor": false,
+  "subMetas": {}
+}
