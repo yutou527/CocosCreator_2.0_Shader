@@ -5,7 +5,7 @@ const gfx = renderEngine.gfx;
 const Material = renderEngine.Material;
 
 // Require to load the shader to program lib
-require('./TestShader');
+require('./shaping');
 
 function TestMaterial() {
     Material.call(this, false);

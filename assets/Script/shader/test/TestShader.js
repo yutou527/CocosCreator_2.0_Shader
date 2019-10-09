@@ -186,53 +186,53 @@ let shader = {
     // }`,
 
     //跟随鼠标的眩光效果
-    frag: `
-        const int NUM_SAMPLES = 60;
-        uniform float time;
-        varying vec2 uv0;
-        uniform sampler2D iTexture;
-        uniform vec2 u_mouse;  //鼠标位置
+    // frag: `
+    //     const int NUM_SAMPLES = 60;
+    //     uniform float time;
+    //     varying vec2 uv0;
+    //     uniform sampler2D iTexture;
+    //     uniform vec2 u_mouse;  //鼠标位置
 
-        float random (vec2 st) {
-            return fract(sin(dot(st.xy + fract(time),vec2(12.9898,78.233)))*43758.5453123);
-        }
-        float noise(vec2 u){
-            return mix( mix( random( vec2(0.0,0.0) ),
-                            random( vec2(1.0,0.0) ), u.x),
-                        mix( random( vec2(0.0,1.0) ),
-                            random( vec2(1.0,1.0) ), u.x), u.y);
-        }
+    //     float random (vec2 st) {
+    //         return fract(sin(dot(st.xy + fract(time),vec2(12.9898,78.233)))*43758.5453123);
+    //     }
+    //     float noise(vec2 u){
+    //         return mix( mix( random( vec2(0.0,0.0) ),
+    //                         random( vec2(1.0,0.0) ), u.x),
+    //                     mix( random( vec2(0.0,1.0) ),
+    //                         random( vec2(1.0,1.0) ), u.x), u.y);
+    //     }
 
-        void main(void) 
-        {
-            float decay=0.96815;
-            float exposure=0.21;
-            float density=0.926;
-            float weight= 0.9;//0.58767;
+    //     void main(void) 
+    //     {
+    //         float decay=0.96815;
+    //         float exposure=0.21;
+    //         float density=0.926;
+    //         float weight= 0.9;//0.58767;
 
-            vec2 tc = uv0;
-            vec2 deltaTexCoord = tc;
+    //         vec2 tc = uv0;
+    //         vec2 deltaTexCoord = tc;
 
-            deltaTexCoord =  uv0 + u_mouse - 0.5;//+vec2(sin(time*.7)*.3,-cos(time*.2)*.3)-.5;
-            deltaTexCoord *= 1.0 / float(NUM_SAMPLES)  * density;
+    //         deltaTexCoord =  uv0 + u_mouse - 0.5;//+vec2(sin(time*.7)*.3,-cos(time*.2)*.3)-.5;
+    //         deltaTexCoord *= 1.0 / float(NUM_SAMPLES)  * density;
 
-            float illuminationDecay = 1.0;
-            vec4 color =texture2D(iTexture, tc.xy)*0.305104;
+    //         float illuminationDecay = 1.0;
+    //         vec4 color =texture2D(iTexture, tc.xy)*0.305104;
 
-            tc += deltaTexCoord * fract( sin(dot(uv0.xy+fract(time),vec2(12.9898, 78.233)))* 43758.5453 );
+    //         tc += deltaTexCoord * fract( sin(dot(uv0.xy+fract(time),vec2(12.9898, 78.233)))* 43758.5453 );
 
-            for(int i=0; i < NUM_SAMPLES; i++)
-            {
-                tc -= deltaTexCoord;
-                vec4 sampleTex = texture2D(iTexture, tc)*0.305104;
-                sampleTex *= illuminationDecay * weight;
-                color += sampleTex;
-                illuminationDecay *= decay;
-            }
-            gl_FragColor = color*exposure;
-            // gl_FragColor = vec4( noise(uv0), noise(uv0), noise(uv0), 1.0);
-        }
-    `
+    //         for(int i=0; i < NUM_SAMPLES; i++)
+    //         {
+    //             tc -= deltaTexCoord;
+    //             vec4 sampleTex = texture2D(iTexture, tc)*0.305104;
+    //             sampleTex *= illuminationDecay * weight;
+    //             color += sampleTex;
+    //             illuminationDecay *= decay;
+    //         }
+    //         gl_FragColor = color*exposure;
+    //         // gl_FragColor = vec4( noise(uv0), noise(uv0), noise(uv0), 1.0);
+    //     }
+    // `
 
 
     //噪音 烟雾
@@ -393,6 +393,42 @@ let shader = {
     //     gl_FragColor = vec4(t * vec3(0.1, 1.1*t, pow(t, 0.5-t)), 1.0);
     // }
     // `
+    //魔性的光晕 来自大佬https://www.shadertoy.com/user/Danguafer 
+    // frag: `
+
+    //     uniform float time;
+    //     uniform sampler2D iTexture;
+    //     uniform vec3 iResolution;
+    //     uniform vec4 color;
+    //     varying vec2 uv0;
+
+    //     #define t time
+    //     #define r iResolution.xy
+    //     void main(){
+    //         vec3 c;
+    //         float l,z=t;
+    //         for(int i=0;i<3;i++) {
+    //             vec2 uv,p= uv0;//gl_FragCoord.xy/r;
+    //             uv=p;
+    //             p-=.5;
+    //             p.x*=r.x/r.y;
+    //             z+=.07;
+    //             l=length(p);
+    //             uv+=p/l*(sin(z)+1.)*abs(sin(l*9.-z*2.));
+    //             c[i]=.01/length(abs(mod(uv,1.)-.5));
+    //         }
+    //         gl_FragColor=vec4(c/l,t);
+    //     }
+
+    // `
+    frag: `
+    // Plot a line on Y using a value between 0.0-1.0
+    float plot(vec2 st, float pct){
+    return  smoothstep( pct-0.02, pct, st.y) -
+            smoothstep( pct, pct+0.02, st.y);
+    }
+
+    `
 
 };
 
